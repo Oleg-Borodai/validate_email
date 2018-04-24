@@ -1,4 +1,4 @@
-Thanks for downloading validate_email.
+Thanks for downloading validemail.
 
 To install it, make sure you have Python 2.2 or greater installed. Then run
 this command from the command prompt:

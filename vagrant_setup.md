@@ -22,11 +22,11 @@ How to Set Up Validate Email Using Vagrant on PC
         $ sudo apt-get install python-pip
    
         ```
-4. Install pyDNS
+4. Install dnspython
     ```
     This is a package dependency of validate email
 
-    $ sudo pip install pydns
+    $ sudo pip install dnspython
     ```
 5. Install git
    ```
@@ -34,18 +34,18 @@ How to Set Up Validate Email Using Vagrant on PC
    ```
 6. Clone the validate_email repo to your vm 
     * (Since its a new machine you will need to clone using the https url)
-    * ```$ git clone git@github.com:efagerberg/validate_email.git```
+    * ```$ git clone git@github.com:oleg-borodai/validate_email.git```
     * If you want to use your ssh keys on your machine you will need to add this line to the vagrant file under the config
         * Looks somthing like this:
           Vagrant::Config.run do |config|
           	# stuff
           	config.ssh.forward_agent = true
           end
-7. cd into validate_email and run script
+7. cd into validemail and run script
     ```
-    $ cd validate_email
+    $ cd validemail
 
-    $ python validate_email.py
+    $ python validemail.py
     ```
 
 

@@ -1,6 +1,8 @@
 # RFC 2822 - style email validation for Python
-# (c) 2012 Syrus Akbary <me@syrusakbary.com>
-# Extended from (c) 2011 Noel Bush <noel@aitools.org>
+# (c) 2018 Oleg Borodai <oleg@borodai.com>
+# Extended from (c) 2012 Syrus Akbary <me@syrusakbary.com>
+# to use dnspython instead of pyDNS
+# Was in turn extended from (c) 2011 Noel Bush <noel@aitools.org>
 # for support of mx and user check
 # This code is made available to you under the GNU LGPL v3.
 #
@@ -29,9 +31,9 @@ except NameError:
         return input(prompt)
 
 try:
-    import DNS
-    ServerError = DNS.ServerError
-    DNS.DiscoverNameServers()
+    import dns.resolver as DNS
+    from dns.exception import DNSException
+    ServerError = DNSException
 except (ImportError, AttributeError):
     DNS = None
 
@@ -99,9 +101,12 @@ MX_CHECK_CACHE = {}
 def get_mx_ip(hostname):
     if hostname not in MX_DNS_CACHE:
         try:
-            MX_DNS_CACHE[hostname] = DNS.mxlookup(hostname)
+            response = DNS.query(hostname, 'MX')
+            res = [(x.preference, str(x.exchange)) for x in response]
+            MX_DNS_CACHE[hostname] = res
         except ServerError as e:
-            if e.rcode == 3 or e.rcode == 2:  # NXDOMAIN (Non-Existent Domain) or SERVFAIL
+            # NXDOMAIN (Non-Existent Domain) or SERVFAIL
+            if isinstance(e, DNS.NoNameservers) or isinstance(e, DNS.NXDOMAIN):
                 MX_DNS_CACHE[hostname] = None
             else:
                 raise
@@ -109,7 +114,7 @@ def get_mx_ip(hostname):
     return MX_DNS_CACHE[hostname]
 
 
-def validate_email(email, check_mx=False, verify=False, debug=False, smtp_timeout=10):
+def validemail(email, check_mx=False, verify=False, debug=False, smtp_timeout=10):
     """Indicate whether the given string is a valid email address
     according to the 'addr-spec' portion of RFC 2822 (see section
     3.4.1).  Parts of the spec that are marked obsolete are *not*
@@ -129,7 +134,7 @@ def validate_email(email, check_mx=False, verify=False, debug=False, smtp_timeou
         if check_mx:
             if not DNS:
                 raise Exception('For check the mx records or check if the email exists you must '
-                                'have installed pyDNS python package')
+                                'have installed dnspython python package')
             hostname = email[email.find('@') + 1:]
             mx_hosts = get_mx_ip(hostname)
             if mx_hosts is None:
@@ -195,7 +200,7 @@ if __name__ == "__main__":
 
         logging.basicConfig()
 
-        result = validate_email(email, mx, validate, debug=True, smtp_timeout=1)
+        result = validemail(email, mx, validate, debug=True, smtp_timeout=1)
         if result:
             print("Valid!")
         elif result is None:
@@ -204,9 +209,3 @@ if __name__ == "__main__":
             print("Invalid!")
 
         time.sleep(1)
-
-
-# import sys
-
-# sys.modules[__name__],sys.modules['validate_email_module'] = validate_email,sys.modules[__name__]
-# from validate_email_module import *

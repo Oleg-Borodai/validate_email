@@ -1,8 +1,8 @@
 ==============
-Validate_email
+Validemail
 ==============
 
-Validate_email is a package for Python that check if an email is valid, properly formatted and really exists.
+Validemail is a package for Python that check if an email is valid, properly formatted and really exists.
 
 
 
@@ -11,14 +11,14 @@ INSTALLATION
 
 First, you must do::
 
-    pip install validate_email
+    pip install validemail
 
 Extra
 ------
 
-For check the domain mx and verify email exits you must have the `pyDNS` package installed::
+For check the domain mx and verify email exits you must have the `dnspython` package installed::
 
-    pip install pyDNS
+    pip install dnspython
 
 
 USAGE
@@ -26,8 +26,8 @@ USAGE
 
 Basic usage::
 
-    from validate_email import validate_email
-    is_valid = validate_email('example@example.com')
+    from validemail import validemail
+    is_valid = validemail('example@example.com')
 
 
 Checking domain has SMTP Server
@@ -35,8 +35,8 @@ Checking domain has SMTP Server
 
 Check if the host has SMTP Server::
 
-    from validate_email import validate_email
-    is_valid = validate_email('example@example.com',check_mx=True)
+    from validemail import validemail
+    is_valid = validemail('example@example.com',check_mx=True)
 
 
 Verify email exists
@@ -44,10 +44,10 @@ Verify email exists
 
 Check if the host has SMTP Server and the email really exists::
 
-    from validate_email import validate_email
-    is_valid = validate_email('example@example.com',verify=True)
+    from validemail import validemail
+    is_valid = validemail('example@example.com',verify=True)
 
 
 TODOs and BUGS
 ==============
-See: http://github.com/syrusakbary/validate_email/issues
+See: https://github.com/oleg-borodai/validate_email/issues
