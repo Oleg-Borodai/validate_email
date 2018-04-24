@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
   name = 'validemail',
-  packages = ['validemail'],
+  py_modules=('validemail',),
   version = '1.1',
   description = 'alidemail verifies if an email address is valid and really exists.',
   author = 'Oleg Borodai',
